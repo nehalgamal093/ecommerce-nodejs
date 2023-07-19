@@ -7,6 +7,8 @@ import morgan from 'morgan';
 import { AppError } from './utils/AppError.js';
 import { globalErrorMiddleware } from './src/middleware/globalErrorAsyncError.js';
 import subCategoryRouter from './src/modules/subcategory/subcategory.router.js';
+import brandRouter from './src/modules/brands/brand.router.js';
+import productRouter from './src/modules/product/product.router.js';
 const app = express();
 const port = 3000;
 
@@ -14,6 +16,8 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use('/api/v1/categories',categoryRouter)
 app.use('/api/v1/subcategories',subCategoryRouter)
+app.use('/api/v1/brands',brandRouter)
+app.use('/api/v1/products',productRouter)
 app.all('*',(req,res,next) =>{
     next(new AppError(`can't find this route: ${req.originalUrl}`,404))
 })
