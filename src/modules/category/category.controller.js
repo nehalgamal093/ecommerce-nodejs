@@ -2,18 +2,27 @@ import slugify from "slugify";
 import { categoryModel } from "../../../models/category.model.js";
 import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
+import { ApiFeatures } from "../../../utils/ApiFeatures.js";
 
-
-const createCategory = catchAsyncError(async (req, res) => {
-  const { name } = req.body;
-  let result = new categoryModel({ name, slug: slugify(name) });
+const createCategory = catchAsyncError(async (req, res,next) => {
+  req.body.slug = slugify(req.body.name)
+  req.body.image = req.file.filename;
+  let result = new categoryModel(req.body);
   await result.save();
-  res.json({ message: "success", result });
+  res.status(201).json({ message: "success", result });
 });
 
 const getAllCategories = catchAsyncError(async (req, res) => {
-  let result = await categoryModel.find({});
-  res.json({ message: "success", result });
+  let apiFeatures = new ApiFeatures(categoryModel.find(), req.query)
+    .paginate()
+    .fields()
+    .filter()
+    .sort()
+    .search();
+
+  //execute query
+  let result = await apiFeatures.mongooseQuery;
+  res.json({ message: "success",page: apiFeatures.page, result });
 });
 
 const getCategory = catchAsyncError(async (req, res, next) => {

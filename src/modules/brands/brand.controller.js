@@ -3,6 +3,7 @@ import { brandModel } from "../../../models/brand.model.js";
 import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import * as factory from "../handlers/factor.handler.js";
+import { ApiFeatures } from "../../../utils/ApiFeatures.js";
 
 
 const createBrand = catchAsyncError(async (req, res) => {
@@ -13,8 +14,16 @@ const createBrand = catchAsyncError(async (req, res) => {
 });
 
 const getAllBrands = catchAsyncError(async (req, res) => {
-  let result = await brandModel.find({});
-  res.json({ message: "success", result });
+  let apiFeatures = new ApiFeatures(brandModel.find(), req.query)
+    .paginate()
+    .fields()
+    .filter()
+    .sort()
+    .search();
+
+  //execute query
+  let result = await apiFeatures.mongooseQuery;
+  res.json({ message: "success",page: apiFeatures.page, result });
 });
 
 const getBrand = catchAsyncError(async (req, res, next) => {
