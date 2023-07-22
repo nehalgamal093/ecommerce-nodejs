@@ -7,8 +7,10 @@ import { ApiFeatures } from "../../../utils/ApiFeatures.js";
 
 
 const createBrand = catchAsyncError(async (req, res) => {
-  const { name } = req.body;
-  let result = new brandModel({ name, slug: slugify(name) });
+
+  req.body.slug = slugify(req.body.name)
+  req.body.logo = req.file.filename;
+  let result = new brandModel(req.body);
   await result.save();
   res.json({ message: "success", result });
 });
@@ -33,14 +35,12 @@ const getBrand = catchAsyncError(async (req, res, next) => {
 
   result && res.json({ message: "success", result });
 });
-
+//need fixes
 const updateBrand = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
-  let result = await brandModel.findByIdAndUpdate(id, {
-    name,
-    slug: slugify(name),
-  },{new:true});
+
+  let result = await brandModel.findByIdAndUpdate(id, req.body,{new:true});
   !result && next(new AppError(`Brand not found ${req.originalUrl}`, 404));
 
   result && res.json({ message: "success", result });

@@ -17,37 +17,19 @@ import { validation } from "../../middleware/validation.js";
 const categoryRouter = express.Router();
 import multer from "multer";
 import { AppError } from "../../../utils/AppError.js";
+import { uploadSingleFile } from "../../middleware/fileUpload.js";
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/category");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  },
-});
-
-function fileFilter(req, file, cb) {
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb(new AppError("images only", 400), false);
-  }
-}
-
-const upload = multer({ storage, fileFilter });
 
 categoryRouter.use("/:categoryId/subcategories", subCategoryRouter);
 categoryRouter
   .route("/")
-  .post(upload.single('image'),validation(createCategorySchema), createCategory)
+  .post(uploadSingleFile('image','category'),validation(createCategorySchema), createCategory)
   .get(getAllCategories);
 
 categoryRouter
   .route("/:id")
   .get(validation(getCategorySchema), getCategory)
   .delete(deleteCategory)
-  .put(validation(updateCategorySchema), updateCategory);
+  .put(uploadSingleFile('image','category'),validation(updateCategorySchema), updateCategory);
 
 export default categoryRouter;

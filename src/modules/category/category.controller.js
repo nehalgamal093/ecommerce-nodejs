@@ -35,11 +35,11 @@ const getCategory = catchAsyncError(async (req, res, next) => {
 
 const updateCategory = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
-  const { name } = req.body;
-  let result = await categoryModel.findByIdAndUpdate(id, {
-    name,
-    slug: slugify(name),
-  },{new:true});
+  req.body.slug = slugify(req.body.name)
+  req.body.image = req.file.filename;
+  let result = await categoryModel.findByIdAndUpdate(id, 
+    req.body
+  ,{new:true});
   !result && next(new AppError(`category not found ${req.originalUrl}`, 404));
 
   result && res.json({ message: "success", result });
