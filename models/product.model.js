@@ -72,10 +72,10 @@ const productSchema = mongoose.Schema(
   { timestamps: true }
 );
 productSchema.post("init", (doc) => {
-  console.log(doc);
+
   doc.imgCover = process.env.BASE_URL + "/product/" + doc.imgCover;
   doc.images = doc.images.map(
-    (path) => process.env.BASE_URL + "/product/" + path
-  );
+    (path => process.env.BASE_URL + "/product/" + path
+  ));
 });
 export const productModel = mongoose.model("product", productSchema);

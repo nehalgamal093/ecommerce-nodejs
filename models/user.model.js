@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema(
       required: true,
       minLength: [6, "minLength 6 characters"],
     },
+    passwordChangedAt:Date,
     phone: {
       type: String,
       required: [true, "phone number required"],

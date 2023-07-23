@@ -1,9 +1,10 @@
 import express from "express";
 import * as user from "./user.controller.js";
+import { protectedRoutes } from "../auth/auth.controller.js";
 
 const userRouter = express.Router();
 
-userRouter.route("/").post(user.createUser).get(user.getAllUsers);
+userRouter.route("/").post(protectedRoutes,user.createUser).get(user.getAllUsers);
 
 userRouter
   .route("/:id")

@@ -7,7 +7,7 @@ import { ApiFeatures } from "../../../utils/ApiFeatures.js";
 const createProduct = catchAsyncError(async (req, res) => {
   req.body.slug = slugify(req.body.title);
   req.body.imgCover = req.files.imgCover[0].filename;
-  req.body.images = req.files.images.map(obj =>obj.filename)
+  req.body.images = req.files.images.map((obj) => obj.filename);
   let result = new productModel(req.body);
   await result.save();
   res.json({ message: "success", result });
@@ -24,7 +24,7 @@ const getAllProducts = catchAsyncError(async (req, res) => {
 
   //execute query
   let result = await apiFeatures.mongooseQuery;
-  res.json({ message: "success",page: apiFeatures.page, result });
+  res.json({ message: "success", page: apiFeatures.page, result });
 });
 
 const getProduct = catchAsyncError(async (req, res, next) => {
