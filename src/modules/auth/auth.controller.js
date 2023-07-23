@@ -30,13 +30,13 @@ export const protectedRoutes = catchAsyncError(async (req, res, next) => {
   let { token } = req.headers;
   if (!token) return next(new AppError("Token not provided", 401));
 
-  let decoded = await jwt.verify(token, process.env.KEY);
+  let decoded = jwt.verify(token, process.env.KEY);
 
   let user = await userModel.findById(decoded.userId);
   if (!user) return next(new AppError("invalid token2", 401));
-  // let changePasswordDate = parseInt(user.passwordChangedAt.getTime() / 1000);
-  // if (changePasswordDate > decoded.iat)
-  //   return next(new AppError("invalid token", 401));
-  // req.user = user;
+  let changePasswordDate = parseInt(user.passwordChangedAt.getTime() / 1000);
+  if (changePasswordDate > decoded.iat)
+    return next(new AppError("invalid token", 401));
+  req.user = user;
   next();
 });
