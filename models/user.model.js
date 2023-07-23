@@ -20,10 +20,7 @@ const userSchema = mongoose.Schema(
       required: true,
       minLength: [6, "minLength 6 characters"],
     },
-    passwordChangedAt:{
-      type:Date,
-      default:Date.now()
-    },
+    passwordChangedAt:Date,
     phone: {
       type: String,
       required: [true, "phone number required"],
@@ -42,6 +39,7 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    wishlist:[{type:mongoose.SchemaTypes.ObjectId,ref:'product'}]
   },
   { timestamps: true }
 );

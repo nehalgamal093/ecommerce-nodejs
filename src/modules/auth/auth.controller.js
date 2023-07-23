@@ -34,9 +34,20 @@ export const protectedRoutes = catchAsyncError(async (req, res, next) => {
 
   let user = await userModel.findById(decoded.userId);
   if (!user) return next(new AppError("invalid token2", 401));
-  let changePasswordDate = parseInt(user.passwordChangedAt.getTime() / 1000);
+  if(user.passwordChangedAt){
+    let changePasswordDate = parseInt(user.passwordChangedAt.getTime() / 1000);
   if (changePasswordDate > decoded.iat)
     return next(new AppError("invalid token", 401));
+  }
   req.user = user;
   next();
 });
+
+
+export const allowedTo = (...roles) =>{
+  return catchAsyncError(async(req,res,next) =>{
+    if(!roles.includes(req.user.role)) 
+    return next(new AppError('You are not authorized to access this route. you are ' +req.user.role,404))
+    next()
+  })
+}
