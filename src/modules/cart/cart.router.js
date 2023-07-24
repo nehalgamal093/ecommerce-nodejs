@@ -12,18 +12,23 @@ cartRouter
     protectedRoutes,
     allowedTo("user"),
     cart.addProductToCart
+  ).get(
+    protectedRoutes,
+    allowedTo("user"),
+    cart.getLoggedUserCart
+  )
+  cartRouter.post('/applycoupon',
+    protectedRoutes,
+    allowedTo("user"),
+    cart.applyCoupon
   )
 
 
-//   cartRouter
-//   .route("/:id")
-//   .get(coupon.getCoupon)
-//   .delete(protectedRoutes, allowedTo("admin","user"), coupon.deleteCoupon)
-//   .put(
-//     protectedRoutes,
-//     allowedTo("user"),
-    
-//     coupon.updateCoupon
-//   );
+  cartRouter
+  .route("/:id")
+  .delete(protectedRoutes, allowedTo("admin","user"),cart.removeProductFromCart)
+  .put(protectedRoutes, allowedTo("user"),cart.updateQuantity)
+  
+  ;
 
 export default cartRouter;

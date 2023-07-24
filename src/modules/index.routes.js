@@ -12,6 +12,7 @@ import wishlistRouter from "./wishlist/wishlist.router.js";
 import addresstRouter from "./address/address.router.js";
 import couponRouter from "./coupon/coupon.router.js";
 import cartRouter from "./cart/cart.router.js";
+import orderRouter from "./order/order.router.js";
 
 
 export function init(app){
@@ -27,6 +28,7 @@ export function init(app){
     app.use("/api/v1/addresses", addresstRouter);
     app.use("/api/v1/coupons", couponRouter);
     app.use("/api/v1/cart", cartRouter);
+    app.use("/api/v1/order", orderRouter);
     app.all("*", (req, res, next) => {
       next(new AppError(`can't find this route: ${req.originalUrl}`, 404));
     });

@@ -4,10 +4,10 @@ dotenv.config();
 import { dbConnection } from "./database/dbConnection.js";
 import morgan from "morgan";
 import { init } from "./src/modules/index.routes.js";
-
+import cors from 'cors'
 const app = express();
 const port = 3000;
-
+app.use(cors())
 app.use(express.json());
 if (process.env.MODE == "development") {
   app.use(morgan("dev"));
