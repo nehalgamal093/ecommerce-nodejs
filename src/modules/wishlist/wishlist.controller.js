@@ -24,7 +24,7 @@ const removeFromWishlist = catchAsyncError(async (req, res, next) => {
   });
 
   const getAllUserWishlist = catchAsyncError(async (req, res, next) => {
-    const { product } = req.body;
+
   
     let result = await userModel.findOne({_id:req.user._id}).populate('wishlist')
     !result && next(new AppError(`Review not found `, 404));
