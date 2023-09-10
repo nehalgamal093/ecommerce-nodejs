@@ -1,7 +1,7 @@
 import express from "express";
 import * as review from "./review.controller.js";
 
-import { uploadSingleFile } from "../../middleware/fileUpload.js";
+// import { uploadSingleFile } from "../../middleware/fileUpload.js";
 import { allowedTo, protectedRoutes } from "../auth/auth.controller.js";
 
 const reviewRouter = express.Router();
@@ -15,14 +15,24 @@ reviewRouter
   )
   .get(review.getAllReviews);
 
-  reviewRouter
+  // reviewRouter
+  // .route("/:id")
+  // .get(review.getReview)
+  // .delete(protectedRoutes, allowedTo("admin","user"), review.deleteReview)
+  // .put(
+  //   protectedRoutes,
+  //   allowedTo("user"),
+  //   uploadSingleFile("logo", "review"),
+  //   review.updateReview
+  // );
+    reviewRouter
   .route("/:id")
   .get(review.getReview)
   .delete(protectedRoutes, allowedTo("admin","user"), review.deleteReview)
   .put(
     protectedRoutes,
     allowedTo("user"),
-    uploadSingleFile("logo", "review"),
+  
     review.updateReview
   );
 

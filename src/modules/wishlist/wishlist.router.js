@@ -1,12 +1,13 @@
 import express from "express";
 import * as wishlist from "./wishlist.controller.js";
 
-import { uploadSingleFile } from "../../middleware/fileUpload.js";
+// import { uploadSingleFile } from "../../middleware/fileUpload.js";
 import { allowedTo, protectedRoutes } from "../auth/auth.controller.js";
 
 const wishlistRouter = express.Router();
 
-wishlistRouter
+
+  wishlistRouter
   .route("/")
   .patch(
     protectedRoutes,
@@ -21,8 +22,5 @@ wishlistRouter
     allowedTo("user"),
     wishlist.getAllUserWishlist
   )
-
-
-
 
 export default wishlistRouter;

@@ -51,8 +51,8 @@ const productSchema = mongoose.Schema(
       default: 0,
       min: 0,
     },
-    imgCover: String,
-    images: [String],
+    // imgCover: String,
+    // images: [String],
     category: {
       type: mongoose.Types.ObjectId,
       ref: "category",
@@ -71,12 +71,12 @@ const productSchema = mongoose.Schema(
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
-productSchema.post("init", (doc) => {
-  doc.imgCover = process.env.BASE_URL + "/product/" + doc.imgCover;
-  doc.images = doc.images.map(
-    (path) => process.env.BASE_URL + "/product/" + path
-  );
-});
+// productSchema.post("init", (doc) => {
+//   doc.imgCover = process.env.BASE_URL + "/product/" + doc.imgCover;
+//   doc.images = doc.images.map(
+//     (path) => process.env.BASE_URL + "/product/" + path
+//   );
+// });
 productSchema.virtual("myReviews", {
   ref: "review",
   localField: "_id",

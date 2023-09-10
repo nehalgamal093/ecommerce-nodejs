@@ -16,7 +16,7 @@ import orderRouter from "./order/order.router.js";
 
 
 export function init(app){
-    app.use(express.static("uploads"));
+    // app.use(express.static("uploads"));
     app.use("/api/v1/categories", categoryRouter);
     app.use("/api/v1/subcategories", subCategoryRouter);
     app.use("/api/v1/brands", brandRouter);

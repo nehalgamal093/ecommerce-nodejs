@@ -1,15 +1,19 @@
 import express from "express";
 import * as product from "./product.controller.js";
-import { uploadMixOfFiles } from "../../middleware/fileUpload.js";
+// import { uploadMixOfFiles } from "../../middleware/fileUpload.js";
 import { allowedTo, protectedRoutes } from "../auth/auth.controller.js";
 
 
 const productRouter = express.Router();
 
 let fieldsArray = [{name:'imgCover',maxCount:1},{name:'images',maxCount:10}]
-productRouter
+// productRouter
+//   .route("/")
+//   .post(protectedRoutes,allowedTo('admin','user'),uploadMixOfFiles(fieldsArray,'product'),product.createProduct)
+//   .get(product.getAllProducts);
+  productRouter
   .route("/")
-  .post(protectedRoutes,allowedTo('admin','user'),uploadMixOfFiles(fieldsArray,'product'),product.createProduct)
+  .post(protectedRoutes,allowedTo('admin','user'),product.createProduct)
   .get(product.getAllProducts);
 
 productRouter

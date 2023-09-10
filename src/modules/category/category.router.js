@@ -17,19 +17,30 @@ import { validation } from "../../middleware/validation.js";
 const categoryRouter = express.Router();
 import multer from "multer";
 import { AppError } from "../../../utils/AppError.js";
-import { uploadSingleFile } from "../../middleware/fileUpload.js";
+// import { uploadSingleFile } from "../../middleware/fileUpload.js";
 
 
 categoryRouter.use("/:categoryId/subcategories", subCategoryRouter);
+// categoryRouter
+//   .route("/")
+//   .post(uploadSingleFile('image','category'),validation(createCategorySchema), createCategory)
+//   .get(getAllCategories);
+
+// categoryRouter
+//   .route("/:id")
+//   .get(validation(getCategorySchema), getCategory)
+//   .delete(deleteCategory)
+//   .put(uploadSingleFile('image','category'),validation(updateCategorySchema), updateCategory);
+
+
 categoryRouter
   .route("/")
-  .post(uploadSingleFile('image','category'),validation(createCategorySchema), createCategory)
+  .post(validation(createCategorySchema), createCategory)
   .get(getAllCategories);
 
 categoryRouter
   .route("/:id")
   .get(validation(getCategorySchema), getCategory)
   .delete(deleteCategory)
-  .put(uploadSingleFile('image','category'),validation(updateCategorySchema), updateCategory);
-
+  .put(validation(updateCategorySchema), updateCategory);
 export default categoryRouter;
