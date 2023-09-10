@@ -1,7 +1,6 @@
 {
   "name": "ecommerce",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -25,5 +24,7 @@
     "qrcode": "^1.5.3",
     "slugify": "^1.6.6",
     "stripe": "^12.14.0"
-  }
+  },
+  "keywords": [],
+  "description": ""
 }
