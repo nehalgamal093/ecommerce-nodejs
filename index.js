@@ -6,7 +6,7 @@ import morgan from "morgan";
 import { init } from "./src/modules/index.routes.js";
 import cors from 'cors'
 const app = express();
-const port = env.process.PORT || 3000;
+const port = process.env.PORT || 3000;
 app.use(cors())
 app.use(express.json());
 if (process.env.MODE == "development") {

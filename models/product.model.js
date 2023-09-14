@@ -74,7 +74,7 @@ const productSchema = mongoose.Schema(
 // productSchema.post("init", (doc) => {
 //   doc.imgCover = process.env.BASE_URL + "/product/" + doc.imgCover;
 //   doc.images = doc.images.map(
-//     (path) => process.env.BASE_URL + "/product/" + path
+//     (path) => .env.BASE_URL + "/product/" + path
 //   );
 // });
 productSchema.virtual("myReviews", {
