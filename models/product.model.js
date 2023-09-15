@@ -53,6 +53,10 @@ const productSchema = mongoose.Schema(
     },
     // imgCover: String,
     // images: [String],
+    images: [{
+      attachment_file:String,
+      cloudinary_id:String
+    }],
     category: {
       type: mongoose.Types.ObjectId,
       ref: "category",

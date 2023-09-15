@@ -3,14 +3,63 @@ import { productModel } from "../../../models/product.model.js";
 import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { ApiFeatures } from "../../../utils/ApiFeatures.js";
-
+import cloudinary from '../../../config/cloudinary.js';
 const createProduct = catchAsyncError(async (req, res) => {
-  req.body.slug = slugify(req.body.title);
+  // req.body.slug = slugify(req.body.title);
   // req.body.imgCover = req.files.imgCover[0].filename;
   // req.body.images = req.files.images.map((obj) => obj.filename);
-  let result = new productModel(req.body);
-  await result.save();
-  res.json({ message: "success", result });
+  
+  // let result = new productModel(req.body);
+  // await result.save();
+  // res.json({ message: "success", result });
+  if(req.body.title || (req.files && req.files.length > 0)){
+    try{
+      let images = null;
+
+      if(req.files && req.files.length > 0){
+        images = [];
+    
+        for(const file of req.files){
+          const {path} = file;
+         
+          images.push({
+            attachment_file:(await cloudinary.uploader.upload(path)).secure_url,
+            cloudinary_id: (await cloudinary.uploader.upload(path)).public_id
+          })
+        }
+       
+      }
+      const newProduct = new productModel({
+        title:req.body.title,
+        slug:slugify(req.body.title),
+        price:req.body.price,
+        priceAfterDiscount:req.body.priceAfterDiscount,
+        ratingAvg:req.body.ratingAvg,
+        ratingCount:req.body.ratingCount,
+        description:req.body.description,
+        quantity:req.body.quantity,
+        sold:req.body.sold,
+        category:req.body.category,
+        subCategory:req.body.subCategory,
+        brand:req.body.brand,
+        images:images,
+     
+      })
+      const result = await newProduct.save();
+      res.status(200).json({success:"success",result})
+    }catch(err){
+      console.log(err)
+    }
+ 
+   } else {
+    res.status(500).json({
+      errors:{
+        common:{
+          msg:"Couldn't create product"
+        }
+      }
+    })
+   }
 });
 
 const getAllProducts = catchAsyncError(async (req, res) => {

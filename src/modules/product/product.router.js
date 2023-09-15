@@ -2,7 +2,7 @@ import express from "express";
 import * as product from "./product.controller.js";
 // import { uploadMixOfFiles } from "../../middleware/fileUpload.js";
 import { allowedTo, protectedRoutes } from "../auth/auth.controller.js";
-
+import { imagesUpload } from "../uploads/imagesUpload.js";
 
 const productRouter = express.Router();
 
@@ -13,7 +13,7 @@ let fieldsArray = [{name:'imgCover',maxCount:1},{name:'images',maxCount:10}]
 //   .get(product.getAllProducts);
   productRouter
   .route("/")
-  .post(protectedRoutes,allowedTo('admin','user'),product.createProduct)
+  .post(protectedRoutes,allowedTo('admin','user'),imagesUpload,product.createProduct)
   .get(product.getAllProducts);
 
 productRouter
