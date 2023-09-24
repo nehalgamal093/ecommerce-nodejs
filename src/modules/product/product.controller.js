@@ -72,10 +72,10 @@ const getAllProducts = catchAsyncError(async (req, res) => {
   //execute query
   let result = await apiFeatures.mongooseQuery;
   res.json({
+    pages: Math.ceil(count / 5),
     message: "success",
     page: apiFeatures.page,
     result,
-    pages: Math.ceil(count / 5),
   });
 });
 
