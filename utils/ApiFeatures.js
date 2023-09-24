@@ -8,8 +8,10 @@ export class ApiFeatures {
     //1-pagination
     let page = this.queryString.page * 1 || 1;
     if (this.queryString.page <= 0) page = 1;
+
     let skip = (page - 1) * 5;
     this.page = page;
+
     this.mongooseQuery.skip(skip).limit(5);
     return this;
   }
