@@ -3,9 +3,9 @@ import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { cartModel } from "../../../models/cart.model.js";
 import { productModel } from "../../../models/product.model.js";
 import { orderModel } from "../../../models/order.model.js";
-import Stripe from "stripe";
+// import Stripe from "stripe";
 
-const stripe = new Stripe("secretkey");
+// const stripe = new Stripe("secretkey");
 
 const createCashOrder = catchAsyncError(async (req, res, next) => {
   const cart = await cartModel.findById(req.params.id);
@@ -48,41 +48,41 @@ const getAllOrders = catchAsyncError(async (req, res, next) => {
   res.status(200).json({ message: "success", orders });
 });
 
-const createCheckOutSession = catchAsyncError(async (req, res, next) => {
-  const cart = await cartModel.findById(req.params.id);
-  const totalOrderPrice = cart.totalOrderPrice
-    ? cart.totalPriceAfterDiscount
-    : cart.totalPrice;
-  let session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "egp",
-          unit_amount: totalOrderPrice * 100,
-          product_data: {
-            name: req.user.name,
-          },
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
+// const createCheckOutSession = catchAsyncError(async (req, res, next) => {
+//   const cart = await cartModel.findById(req.params.id);
+//   const totalOrderPrice = cart.totalOrderPrice
+//     ? cart.totalPriceAfterDiscount
+//     : cart.totalPrice;
+//   let session = await stripe.checkout.sessions.create({
+//     line_items: [
+//       {
+//         price_data: {
+//           currency: "egp",
+//           unit_amount: totalOrderPrice * 100,
+//           product_data: {
+//             name: req.user.name,
+//           },
+//         },
+//         quantity: 1,
+//       },
+//     ],
+//     mode: "payment",
 
-    //if success send front end link
-    success_url: "",
-    //if cancelledsend him to cart for example
-    cancel_url: "",
-    customer_email: "",
-    client_reference_id: req.params.id,
-    //meta data for additional information
-    metadata: req.body.shippingAddress,
-  });
-  res.json({ message: "success", session });
-});
+//     //if success send front end link
+//     success_url: "",
+//     //if cancelledsend him to cart for example
+//     cancel_url: "",
+//     customer_email: "",
+//     client_reference_id: req.params.id,
+//     //meta data for additional information
+//     metadata: req.body.shippingAddress,
+//   });
+//   res.json({ message: "success", session });
+// });
 
 export {
   createCashOrder,
   getSpecificOrder,
   getAllOrders,
-  createCheckOutSession,
+  // createCheckOutSession,
 };
