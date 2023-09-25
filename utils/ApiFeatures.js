@@ -12,7 +12,7 @@ export class ApiFeatures {
     let skip = (page - 1) * 5;
     this.page = page;
 
-    this.mongooseQuery.skip(skip).limit(5);
+    this.mongooseQuery.skip(skip).limit(6);
     return this;
   }
 
