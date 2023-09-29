@@ -15,9 +15,7 @@ import {
 import { validation } from "../../middleware/validation.js";
 
 const categoryRouter = express.Router();
-import multer from "multer";
-import { AppError } from "../../../utils/AppError.js";
-// import { uploadSingleFile } from "../../middleware/fileUpload.js";
+
 
 
 categoryRouter.use("/:categoryId/subcategories", subCategoryRouter);

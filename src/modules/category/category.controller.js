@@ -4,9 +4,9 @@ import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { ApiFeatures } from "../../../utils/ApiFeatures.js";
 
-const createCategory = catchAsyncError(async (req, res,next) => {
-  req.body.slug = slugify(req.body.name)
-  req.body.image = req.file.filename;
+const createCategory = catchAsyncError(async (req, res, next) => {
+  req.body.slug = slugify(req.body.name);
+
   let result = new categoryModel(req.body);
   await result.save();
   res.status(201).json({ message: "success", result });
@@ -22,7 +22,7 @@ const getAllCategories = catchAsyncError(async (req, res) => {
 
   //execute query
   let result = await apiFeatures.mongooseQuery;
-  res.json({ message: "success",page: apiFeatures.page, result });
+  res.json({ message: "success", page: apiFeatures.page, result });
 });
 
 const getCategory = catchAsyncError(async (req, res, next) => {
@@ -35,11 +35,11 @@ const getCategory = catchAsyncError(async (req, res, next) => {
 
 const updateCategory = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
-  req.body.slug = slugify(req.body.name)
-  req.body.image = req.file.filename;
-  let result = await categoryModel.findByIdAndUpdate(id, 
-    req.body
-  ,{new:true});
+  req.body.slug = slugify(req.body.name);
+
+  let result = await categoryModel.findByIdAndUpdate(id, req.body, {
+    new: true,
+  });
   !result && next(new AppError(`category not found ${req.originalUrl}`, 404));
 
   result && res.json({ message: "success", result });
