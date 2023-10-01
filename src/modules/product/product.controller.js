@@ -4,7 +4,8 @@ import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { ApiFeatures } from "../../../utils/ApiFeatures.js";
 import cloudinary from "../../../config/cloudinary.js";
-import { TotalApiFeatures } from "../../../utils/totalProducts.js";
+import { TotalApiFeatures } from "../../../utils/TotalApiFeatures.js";
+
 const createProduct = catchAsyncError(async (req, res) => {
   // req.body.slug = slugify(req.body.title);
   // req.body.imgCover = req.files.imgCover[0].filename;

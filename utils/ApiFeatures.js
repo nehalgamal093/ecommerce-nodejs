@@ -1,5 +1,3 @@
-import { productModel } from "../models/product.model.js";
-
 export class ApiFeatures {
   constructor(mongooseQuery, queryString) {
     this.mongooseQuery = mongooseQuery;

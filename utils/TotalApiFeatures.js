@@ -1,5 +1,3 @@
-import { productModel } from "../models/product.model.js";
-
 export class TotalApiFeatures {
   constructor(totalQuery, totalquerystring) {
     this.totalQuery = totalQuery;
