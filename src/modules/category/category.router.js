@@ -13,10 +13,8 @@ import {
   updateCategorySchema,
 } from "./category.validation.js";
 import { validation } from "../../middleware/validation.js";
-
+import { imageCoverUpload } from "../uploads/imageUpload.js";
 const categoryRouter = express.Router();
-
-
 
 categoryRouter.use("/:categoryId/subcategories", subCategoryRouter);
 // categoryRouter
@@ -30,10 +28,9 @@ categoryRouter.use("/:categoryId/subcategories", subCategoryRouter);
 //   .delete(deleteCategory)
 //   .put(uploadSingleFile('image','category'),validation(updateCategorySchema), updateCategory);
 
-
 categoryRouter
   .route("/")
-  .post(validation(createCategorySchema), createCategory)
+  .post(imageCoverUpload, validation(createCategorySchema), createCategory)
   .get(getAllCategories);
 
 categoryRouter

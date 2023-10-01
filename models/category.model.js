@@ -14,6 +14,8 @@ const categorySchema = mongoose.Schema(
       lowercase: true,
       required: true,
     },
+    image: String,
+    cloudinary_id: String,
   },
   { timestamps: true }
 );

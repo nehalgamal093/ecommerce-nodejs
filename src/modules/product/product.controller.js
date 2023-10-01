@@ -4,6 +4,7 @@ import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import { ApiFeatures } from "../../../utils/ApiFeatures.js";
 import cloudinary from "../../../config/cloudinary.js";
+import { TotalApiFeatures } from "../../../utils/totalProducts.js";
 const createProduct = catchAsyncError(async (req, res) => {
   // req.body.slug = slugify(req.body.title);
   // req.body.imgCover = req.files.imgCover[0].filename;
@@ -68,13 +69,21 @@ const getAllProducts = catchAsyncError(async (req, res) => {
     .filter()
     .sort()
     .search();
+  let total = new TotalApiFeatures(productModel.find(), req.query)
+    .fields()
+    .filter()
+    .sort()
+    .search();
   const count = await productModel.count();
   //execute query
   let result = await apiFeatures.mongooseQuery;
+  let totalResult = await total.totalQuery;
+  let pagesPerPage = totalResult.length;
   res.json({
     pages: Math.ceil(count / 6),
     message: "success",
     page: apiFeatures.page,
+    pagePerCategory: Math.ceil(pagesPerPage / 6),
     result,
   });
 });

@@ -1,3 +1,5 @@
+import { productModel } from "../models/product.model.js";
+
 export class ApiFeatures {
   constructor(mongooseQuery, queryString) {
     this.mongooseQuery = mongooseQuery;
@@ -6,6 +8,7 @@ export class ApiFeatures {
 
   paginate() {
     //1-pagination
+
     let page = this.queryString.page * 1 || 1;
     if (this.queryString.page <= 0) page = 1;
 
@@ -29,6 +32,7 @@ export class ApiFeatures {
       (match) => `$${match}`
     );
     filterObj = JSON.parse(filterObj);
+
     this.mongooseQuery.find(filterObj);
     return this;
   }
