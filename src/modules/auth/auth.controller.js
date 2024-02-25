@@ -22,7 +22,7 @@ export const signIn = catchAsyncError(async (req, res, next) => {
       { name: isFound.name, userId: isFound._id, role: isFound.role },
       process.env.KEY
     );
-    return res.json({ message: "success", token, user });
+    return res.json({ message: "success", token, user, _id: isFound._id });
   }
   next(new AppError("incorrect email or password", 401));
 });
