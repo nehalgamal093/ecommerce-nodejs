@@ -4,10 +4,16 @@ import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 export const signup = catchAsyncError(async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   let isFound = await userModel.findOne({ email: req.body.email });
 
-  if (isFound) return next(new AppError("email already exists", 409));
+  if (isFound) return next(new AppError("Email already exists", 409));
+
   let user = new userModel(req.body);
+
   await user.save();
   res.json({ message: "success", user });
 });
@@ -24,7 +30,7 @@ export const signIn = catchAsyncError(async (req, res, next) => {
     );
     return res.json({ message: "success", token, user, _id: isFound._id });
   }
-  next(new AppError("incorrect email or password", 401));
+  next(new AppError("Incorrect email or password", 401));
 });
 
 export const protectedRoutes = catchAsyncError(async (req, res, next) => {
