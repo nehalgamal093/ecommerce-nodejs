@@ -1,6 +1,7 @@
 import { userModel } from "../../../models/user.model.js";
 import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
+import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 export const signup = catchAsyncError(async (req, res, next) => {
