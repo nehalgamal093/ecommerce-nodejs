@@ -2,12 +2,7 @@ import { body, validationResult } from "express-validator";
 
 // Add this validation middleware
 export const signupValidation = [
-  body("name")
-    .trim()
-    .notEmpty()
-    .withMessage("Name is required")
-    .isMobilePhone()
-    .withMessage("Name number format"),
+  body("name").trim().notEmpty().withMessage("Name is required"),
 
   body("email")
     .trim()
@@ -38,10 +33,5 @@ export const loginValidation = [
     .isEmail()
     .withMessage("Invalid email format"),
 
-  body("password")
-    .trim()
-    .notEmpty()
-    .withMessage("Password is required")
-    .isLength({ min: 8 })
-    .withMessage("Password must be at least 8 characters"),
+  body("password").trim().notEmpty().withMessage("Password is required"),
 ];
