@@ -4,7 +4,7 @@ import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import cloudinary from "../../../config/cloudinary.js";
 const createSubCategory = catchAsyncError(async (req, res) => {
-  const { name, category } = req.body;
+  const { name, category, image } = req.body;
   let result = new subCategoryModel({
     name,
     category,
