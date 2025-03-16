@@ -9,6 +9,8 @@ const createSubCategory = catchAsyncError(async (req, res) => {
     name,
     category,
     image: (await cloudinary.uploader.upload(req.files[0].path)).secure_url,
+    cloudinary_id: (await cloudinary.uploader.upload(req.files[0].path))
+      .public_id,
     slug: slugify(name),
   });
   await result.save();
