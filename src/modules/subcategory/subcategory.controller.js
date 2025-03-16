@@ -3,34 +3,18 @@ import { subCategoryModel } from "../../../models/subcategory.model.js";
 import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import cloudinary from "../../../config/cloudinary.js";
-const createSubCategory = catchAsyncError(async (req, res, next) => {
-  let newSubCategory;
-  try {
-    if (req.files && req.files.length > 0) {
-      newSubCategory = new subCategoryModel({
-        name: req.body.name,
-        slug: slugify(req.body.name),
-        category: req.body.category,
-        image: (await cloudinary.uploader.upload(req.files[0].path)).secure_url,
-        cloudinary_id: (await cloudinary.uploader.upload(req.files[0].path))
-          .public_id,
-      });
-    } else {
-      newSubCategory = new subCategoryModel({
-        ...req.body,
-      });
-    }
-    await newSubCategory.save();
-    res.status(200).json({ sucess: "success", newSubCategory });
-  } catch (err) {
-    res.status(500).json({
-      errors: {
-        common: {
-          msg: err.message,
-        },
-      },
-    });
-  }
+const createSubCategory = catchAsyncError(async (req, res) => {
+  const { name } = req.body;
+  let result = new subCategoryModel({
+    name,
+    category,
+    slug: slugify(name),
+    image: (await cloudinary.uploader.upload(req.files[0].path)).secure_url,
+    cloudinary_id: (await cloudinary.uploader.upload(req.files[0].path))
+      .public_id,
+  });
+  await result.save();
+  res.json({ message: "success", result });
 });
 
 const getAllSubCategories = catchAsyncError(async (req, res) => {

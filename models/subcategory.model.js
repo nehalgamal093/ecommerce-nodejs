@@ -17,6 +17,7 @@ const subCategorySchema = mongoose.Schema(
     category: {
       type: mongoose.Types.ObjectId,
       ref: "category",
+      required: [true, "category required"],
     },
     image: String,
     cloudinary_id: String,
