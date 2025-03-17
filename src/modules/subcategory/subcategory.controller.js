@@ -4,7 +4,7 @@ import { AppError } from "../../../utils/AppError.js";
 import { catchAsyncError } from "../../middleware/catchAsyncError.js";
 import cloudinary from "../../../config/cloudinary.js";
 const createSubCategory = catchAsyncError(async (req, res) => {
-  const { name, category } = req.body;
+  const { name } = req.body;
   let result = new subCategoryModel({
     name,
     category,
@@ -22,7 +22,7 @@ const getAllSubCategories = catchAsyncError(async (req, res) => {
   if (req.params.categoryId) {
     filter = { category: req.params.categoryId };
   }
-  let result = await subCategoryModel.find();
+  let result = await subCategoryModel.find(filter);
   res.json({ message: "success", result });
 });
 
