@@ -43,18 +43,41 @@ const addProductToCart = catchAsyncError(async (req, res, next) => {
 });
 
 const removeProductFromCart = catchAsyncError(async (req, res, next) => {
-  let result = await cartModel.findOneAndUpdate(
-    { user: req.user._id },
-    { $pull: { cartItems: { _id: req.params.id } } },
+  const { id } = req.params;
+  const userId = req.user._id;
+
+  const cart = await cartModel.findOne({ user: userId });
+  if (!cart) {
+    return next(new AppError("Cart not found", 404));
+  }
+
+  const result = await cartModel.findOneAndUpdate(
+    { user: userId },
+    { $pull: { cartItems: { product: id } } },
     { new: true }
   );
-  !result && next(new AppError(`Item not found `, 404));
+
+  if (!result) {
+    return next(new AppError("Failed to update cart", 400));
+  }
+
+  console.log("Cart items after:", result.cartItems);
+
   calTotalPrice(result);
+
   if (result.discount) {
     result.totalPriceAfterDiscount =
       result.totalPrice - (result.totalPrice * result.discount) / 100;
   }
-  result && res.json({ message: "success", result });
+
+  await result.save();
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      cart: result,
+    },
+  });
 });
 
 const updateQuantity = catchAsyncError(async (req, res, next) => {
