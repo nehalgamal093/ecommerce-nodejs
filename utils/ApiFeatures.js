@@ -2,58 +2,65 @@ export class ApiFeatures {
   constructor(mongooseQuery, queryString) {
     this.mongooseQuery = mongooseQuery;
     this.queryString = queryString;
-    this.page = 1; // Default page
   }
 
   paginate() {
-    const page = this.queryString.page * 1 || 1;
-    const limit = this.queryString.limit * 1 || 6;
-    const skip = (page - 1) * limit;
+    //1-pagination
 
-    this.mongooseQuery = this.mongooseQuery.skip(skip).limit(limit);
+    let page = this.queryString.page * 1 || 1;
+    if (this.queryString.page <= 0) page = 1;
+
+    let skip = (page - 1) * 5;
     this.page = page;
-    return this; // Make sure to return 'this' for chaining
-  }
 
-  filter() {
-    const queryObj = { ...this.queryString };
-    const excludedFields = ["page", "sort", "limit", "fields", "keyword"];
-    excludedFields.forEach((el) => delete queryObj[el]);
-
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
-    this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr));
+    this.mongooseQuery.skip(skip).limit(10);
     return this;
   }
 
+  filter() {
+    //2- filter
+    let filterObj = { ...this.queryString };
+    let excludedQuery = ["page", "sort", "fields", "keyword"];
+    excludedQuery.forEach((q) => {
+      delete filterObj[q];
+    });
+    filterObj = JSON.stringify(filterObj);
+    filterObj = filterObj.replace(
+      /\b(gt|gte|lt|lte)\b/g,
+      (match) => `$${match}`
+    );
+    filterObj = JSON.parse(filterObj);
+
+    this.mongooseQuery.find(filterObj);
+    return this;
+  }
+
+  //3- sort
   sort() {
     if (this.queryString.sort) {
-      const sortBy = this.queryString.sort.split(",").join(" ");
-      this.mongooseQuery = this.mongooseQuery.sort(sortBy);
-    } else {
-      this.mongooseQuery = this.mongooseQuery.sort("-createdAt");
+      let sortedBy = this.queryString.sort.split(",").join(" ");
+      this.mongooseQuery.sort(sortedBy);
     }
     return this;
   }
 
+  //4-search
   search() {
     if (this.queryString.keyword) {
-      const keyword = this.queryString.keyword;
-      this.mongooseQuery = this.mongooseQuery.find({
+      this.mongooseQuery.find({
         $or: [
-          { title: { $regex: keyword, $options: "i" } },
-          { description: { $regex: keyword, $options: "i" } },
+          { title: { $regex: this.queryString.keyword, $options: "i" } },
+          { description: { $regex: this.queryString.keyword, $options: "i" } },
         ],
       });
     }
     return this;
   }
-
+  //5- select fields
   fields() {
     if (this.queryString.fields) {
-      const fields = this.queryString.fields.split(",").join(" ");
-      this.mongooseQuery = this.mongooseQuery.select(fields);
+      let fields = this.queryString.fields.split(",").join(" ");
+      this.mongooseQuery.select(fields);
     }
     return this;
   }

@@ -56,30 +56,29 @@ const createProduct = catchAsyncError(async (req, res) => {
 });
 
 const getAllProducts = catchAsyncError(async (req, res) => {
-  // Build query
-  const features = new ApiFeatures(productModel.find(), req.query)
-    .filter()
-    .search()
-    .sort()
+  //build query
+  let apiFeatures = new ApiFeatures(productModel.find(), req.query)
+    .paginate()
     .fields()
-    .paginate(); // Note: paginate should come last
-
-  // Execute query
-  const products = await features.mongooseQuery;
-
-  // Get total count (without pagination)
-  const totalFeatures = new TotalApiFeatures(productModel.find(), req.query)
     .filter()
+    .sort()
     .search();
-
-  const totalCount = await totalFeatures.totalQuery.countDocuments();
-
+  let total = new TotalApiFeatures(productModel.find(), req.query)
+    .fields()
+    .filter()
+    .sort()
+    .search();
+  const count = await productModel.count();
+  //execute query
+  let result = await apiFeatures.mongooseQuery;
+  let totalResult = await total.totalQuery;
+  let pagesPerPage = totalResult.length;
   res.json({
-    status: "success",
-    results: products.length,
-    total: totalCount,
-    page: features.page,
-    data: products,
+    pages: Math.ceil(count / 6),
+    message: "success",
+    page: apiFeatures.page,
+    pagePerCategory: Math.ceil(pagesPerPage / 6),
+    result,
   });
 });
 
