@@ -7,13 +7,6 @@ import cloudinary from "../../../config/cloudinary.js";
 import { TotalApiFeatures } from "../../../utils/TotalApiFeatures.js";
 
 const createProduct = catchAsyncError(async (req, res) => {
-  // req.body.slug = slugify(req.body.title);
-  // req.body.imgCover = req.files.imgCover[0].filename;
-  // req.body.images = req.files.images.map((obj) => obj.filename);
-
-  // let result = new productModel(req.body);
-  // await result.save();
-  // res.json({ message: "success", result });
   if (req.body.title || (req.files && req.files.length > 0)) {
     try {
       let images = null;
@@ -63,29 +56,30 @@ const createProduct = catchAsyncError(async (req, res) => {
 });
 
 const getAllProducts = catchAsyncError(async (req, res) => {
-  //build query
-  let apiFeatures = new ApiFeatures(productModel.find(), req.query)
-    .paginate()
-    .fields()
+  // Build query
+  const features = new ApiFeatures(productModel.find(), req.query)
     .filter()
+    .search()
     .sort()
-    .search();
-  let total = new TotalApiFeatures(productModel.find(), req.query)
     .fields()
+    .paginate(); // Note: paginate should come last
+
+  // Execute query
+  const products = await features.mongooseQuery;
+
+  // Get total count (without pagination)
+  const totalFeatures = new TotalApiFeatures(productModel.find(), req.query)
     .filter()
-    .sort()
     .search();
-  const count = await productModel.count();
-  //execute query
-  let result = await apiFeatures.mongooseQuery;
-  let totalResult = await total.totalQuery;
-  let pagesPerPage = totalResult.length;
+
+  const totalCount = await totalFeatures.totalQuery.countDocuments();
+
   res.json({
-    pages: Math.ceil(count / 6),
-    message: "success",
-    page: apiFeatures.page,
-    pagePerCategory: Math.ceil(pagesPerPage / 6),
-    result,
+    status: "success",
+    results: products.length,
+    total: totalCount,
+    page: features.page,
+    data: products,
   });
 });
 

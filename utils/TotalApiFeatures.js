@@ -18,7 +18,7 @@ export class TotalApiFeatures {
     );
     filterObj = JSON.parse(filterObj);
 
-    this.totalQuery.find(filterObj);
+    this.totalQuery = this.totalQuery.find(filterObj);
     return this;
   }
 
@@ -26,7 +26,7 @@ export class TotalApiFeatures {
   sort() {
     if (this.totalquerystring.sort) {
       let sortedBy = this.totalquerystring.sort.split(",").join(" ");
-      this.totalQuery.sort(sortedBy);
+      this.totalQuery = this.totalQuery.sort(sortedBy);
     }
     return this;
   }
@@ -34,7 +34,7 @@ export class TotalApiFeatures {
   //4-search
   search() {
     if (this.totalquerystring.keyword) {
-      this.totalQuery.find({
+      this.totalQuery = this.totalQuery.find({
         $or: [
           { title: { $regex: this.totalquerystring.keyword, $options: "i" } },
           {
@@ -52,7 +52,7 @@ export class TotalApiFeatures {
   fields() {
     if (this.totalquerystring.fields) {
       let fields = this.totalquerystring.fields.split(",").join(" ");
-      this.totalQuery.select(fields);
+      this.totalQuery = this.totalQuery.select(fields);
     }
     return this;
   }
